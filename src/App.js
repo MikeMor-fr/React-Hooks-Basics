@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CardList } from "./components/card-list/card-list.component";
 import { SearchBox } from "./components/search-box/search-box.component";
+import { SearchFilterBox } from "./components/search-filter-box/search-filetr-box.component";
 import "./styles.css";
 
 function App() {
@@ -29,8 +30,14 @@ function App() {
     setSearchField(event.target.value);
   };
 
-  const filteredMonsters = monsters.filter((monster) =>
-    monster.name.toLowerCase().includes(searchField.toLowerCase())
+  const onSearchFilterChange = (event) => {
+    setSearchField(event.target.value);
+  };
+
+  const filteredMonsters = monsters.filter(
+    (monster) =>
+      monster.name.toLowerCase().includes(searchField.toLowerCase()) ||
+      monster.email.toLowerCase().includes(searchField.toLowerCase())
   );
 
   return !monsters.length ? (
@@ -39,6 +46,10 @@ function App() {
     <div className="App">
       <h1>Monsters Rolodex</h1>
       <SearchBox placeholder="search monsters" handleChange={onSearchChange} />
+      <SearchFilterBox
+        placeholder="filter box"
+        handleChange={onSearchFilterChange}
+      />
       <CardList monsters={filteredMonsters} />
     </div>
   );
