@@ -1,9 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { CardList } from "./components/card-list/card-list.component";
-import { SearchBox } from "./components/search-box/search-box.component";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+
+import { CardList } from "../components/card-list/card-list.component";
+import { SearchBox } from "../components/search-box/search-box.component";
 import "./styles.css";
 
-function App() {
+import { setSearchField, setMonsters } from "../action";
+
+const mapStateToProps = (state) => {
+  return {
+    searchField: state.searchField,
+    monsters: state.monsters
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+    setMonsters: (data) => dispatch(setMonsters(data))
+  };
+};
+
+function App(props) {
   // constructor() {
   //   super();
   //   this.state = {
@@ -11,8 +29,8 @@ function App() {
   //     searchField: ""
   //   };
   // }
-  const [monsters, setMonsters] = useState([]);
-  const [searchField, setSearchField] = useState("");
+
+  const { monsters, setMonsters, searchField, onSearchChange } = props;
 
   // componentDidMount() {
   //   fetch("https://jsonplaceholder.typicode.com/users")
@@ -24,10 +42,6 @@ function App() {
       .then((response) => response.json())
       .then((users) => setMonsters(users));
   }, []);
-
-  const onSearchChange = (event) => {
-    setSearchField(event.target.value);
-  };
 
   const filteredMonsters = monsters.filter((monster) =>
     monster.name.toLowerCase().includes(searchField.toLowerCase())
@@ -44,4 +58,4 @@ function App() {
   );
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
